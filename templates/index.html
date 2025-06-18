@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Bracket Seeded Karate</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+        <div class="left">
+            <h1 class="glow-text">Karate ChampionShip</h1>
+        </div>
+    </nav>
+
+    <!-- INTRODUCTION SECTION -->
+    <section id="introduction" data-aos="fade-up">
+        <section class="welcome-section">
+            <div class="welcome-content">
+                <div class="welcome-text">
+                    <div class="group-name">Kelompok Genap</div>
+                    <div class="main-title">
+                        WELCOME TO KARATE <span class="glow-text">CHAMPIONSHIP!</span>
+                    </div>
+                    <div class="subtitle">Fight with honor, win with pride!</div>
+                </div>
+                <div class="welcome-image">
+                    <img src="{{ url_for('static', filename='karakte-intro.png') }}" alt="Karate Image">
+                </div>
+            </div>
+        </section>
+    </section> 
+
+    <!-- FORM SECTION -->
+    <section class="Karates-form">
+        <div class="karate-form-container">
+            <h2 class="form-title">Masukkan Jumlah Peserta</h2>
+            <form method="POST">
+                <label for="jumlah">Jumlah Peserta (2 - 16)</label>
+                <input type="number" id="jumlah" name="jumlah" min="2" max="16" required>
+                <button type="submit"><span>Lanjut</span><i></i></button>
+            </form>
+        </div>
+    </section>
+
+    <!-- AOS Script -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+
+</body>
+</html>
