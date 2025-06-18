@@ -17,7 +17,7 @@ def submit():
 
     for i in range(1, jumlah + 1):
         nama = request.form.get(f'nama_{i}')
-        keterangan = request.form.get(f'keteragan_{i}')
+        keterangan = request.form.get(f'keterangan_{i}')
         peserta_list.append([nama, keterangan])
 
     with open('peserta.csv', 'a', newline='', encoding='utf-8') as f:
