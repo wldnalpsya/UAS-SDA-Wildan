@@ -1,0 +1,184 @@
+html {
+    scroll-behavior: smooth;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #121212;
+}
+
+/* ========== NAVBAR ========== */
+.navbar {
+    background: linear-gradient(to right, #6e0303, #0E2D50);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 75px;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+    padding: 0 40px;
+}
+
+.left h1 {
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.right ul {
+    display: flex;
+    list-style: none;
+    gap: 15px;
+}
+
+.right ul li a {
+    text-decoration: none;
+}
+
+.checkBtn, #check {
+    display: none;
+}
+
+/* Welcome Section */
+.welcome-section {
+    background-color: #252627;
+    width: 100%;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 20px;
+}
+
+.welcome-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 60px;
+    max-width: 1100px;
+    flex-wrap: wrap;
+}
+
+.welcome-text {
+    flex: 1;
+    min-width: 300px;
+}
+
+.group-name {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.main-title {
+    font-size: 40px;
+    font-weight: bold;
+    text-shadow: 0 0 50px #6e0303, 0 0 50px #0E2D50;
+}
+
+.subtitle {
+    font-size: 20px;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+.welcome-image img {
+    max-width: 400px;
+    filter: drop-shadow(0 0 20px #6e0303);
+}
+
+/* Form Section */
+.Karates-form {
+    padding: 40px 30px;
+    background-color: #1a1a1a;
+    display: flex;
+    justify-content: center;
+}
+
+.karate-form-container {
+    max-width: 600px;
+    width: 100%;
+    background-color: #2a2a2a;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+.form-title {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #ff4b5c;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    background-color: #1d1d1d;
+    color: white;
+    font-size: 16px;
+}
+
+input:focus,
+select:focus {
+    border-color: #ff4b5c;
+    outline: none;
+    box-shadow: 0 0 5px #ff4b5c;
+}
+
+.participant-entry label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+/* Button Style */
+button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #ff4b5c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #e8434d;
+}
+
+/* Super Glow Championship Text */
+.glow-text {
+    background: linear-gradient(270deg, 
+     #ff0000, #ff3366, #ff6699, #ffb3c6, #ffe5ec, #ffb3c6, #ff6699, #ff3366, #ff0000, #990000);
+    background-size: 1000% 1000%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glowing 15s ease infinite;
+    font-weight: bold;
+}
+
+@keyframes glowing {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
