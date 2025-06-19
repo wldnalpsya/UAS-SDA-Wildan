@@ -3,7 +3,7 @@ import random
 import csv
 
 # Backend
-def proses_ronde(round_data):
+def proses_ronde(round_data, total_peserta):
     round_selanjutnya = []
 
     total_main = len(round_data)
