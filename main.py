@@ -5,28 +5,25 @@ import csv
 # Backend
 def proses_ronde(round_data):
     round_selanjutnya = []
-    
+
+    total_main = len(round_data)
+
     for p1, p2 in round_data:
-        if p1["Keterangan"] == "BYE" or p2["Keterangan"] == "BYE":
-            round_selanjutnya.append(p1 if p1["Keterangan"] != "BYE" else p2)
+        if p1["Keterangan"].lower() == "bye" or p2["Keterangan"].lower() == "bye":
+            round_selanjutnya.append(p1 if p1["Keterangan"].lower() != "bye" else p2)
             continue
-        if len(round_data) >= 8:
-            if p1["Keterangan"] == "seeded":
+
+        if total_main >= 8:
+            if p1["Keterangan"].lower() == "seeded":
                 winner = p1
-                loser = p2
-            elif p2["Keterangan"] == "seeded":
+            elif p2["Keterangan"].lower() == "seeded":
                 winner = p2
-                loser = p1
             else:
                 skor_p1 = random.randint(0, 1)
-                skor_p2 = 1 - skor_p1
-                winner = p1 if skor_p1 > skor_p2 else p2
-                loser = p2 if skor_p1 > skor_p2 else p1
+                winner = p1 if skor_p1 == 1 else p2
         else:
             skor_p1 = random.randint(0, 1)
-            skor_p2 = 1 - skor_p1
-            winner = p1 if skor_p1 > skor_p2 else p2
-            loser = p2 if skor_p1 > skor_p2 else p1
+            winner = p1 if skor_p1 == 1 else p2
 
         round_selanjutnya.append(winner)
 
@@ -42,7 +39,6 @@ def jumlah_bracket(jml_peserta):
     elif jml_peserta <= 16:
         return 16
 
-
 def jumlah_seed_otomatis(n):
     if n >= 16:
         return 4
@@ -50,8 +46,10 @@ def jumlah_seed_otomatis(n):
         return 3
     elif n >= 8:
         return 2
-    if n >= 4:
+    elif n >= 4:
         return 1
+    else:
+        return 0
 
 def buat_bracket(jumlah_peserta, daftar_seed, semua_nama):
     ukuran_bracket = jumlah_bracket(jumlah_peserta)
@@ -67,8 +65,8 @@ def buat_bracket(jumlah_peserta, daftar_seed, semua_nama):
     posisi_seed = []
     if len(daftar_seed) == 2:
         posisi_seed = [0, ukuran_bracket - 1]
-    else:
-        jarak_seed = 4
+    elif len(daftar_seed) > 0:
+        jarak_seed = ukuran_bracket // len(daftar_seed)
         mulai_seed = random.randrange(jarak_seed)
         posisi_seed = [(mulai_seed + i * jarak_seed) % ukuran_bracket for i in range(len(daftar_seed))]
 
@@ -201,21 +199,33 @@ def bracket():
             r4.append(row)
         if row["r4"] == "1":
             r5.append(row)
+                
+    ukuran_bracket = jumlah_bracket(jumlah_peserta)
     
-    r2 = [(r2[i], r2[i+1]) for i in range(0, len(r2), 2) if len(r2) % 2 == 0]
-    r3 = [(r3[i], r3[i+1]) for i in range(0, len(r3), 2) if len(r3) % 2 == 0]
-    r4 = [(r4[i], r4[i+1]) for i in range(0, len(r4), 2) if len(r4) % 2 == 0]
+    if ukuran_bracket > 2:
+        r2 = [(r2[i], r2[i+1]) for i in range(0, len(r2), 2) if len(r2) % 2 == 0]
+    
+    if ukuran_bracket > 4:
+        r3 = [(r3[i], r3[i+1]) for i in range(0, len(r3), 2) if len(r3) % 2 == 0] 
+    
+    if ukuran_bracket > 8:
+        r4 = [(r4[i], r4[i+1]) for i in range(0, len(r4), 2) if len(r4) % 2 == 0]
     
     ronde_saat_ini = 2
-    if len(r2) > 0:
-        ronde_saat_ini = 3
+    if ukuran_bracket == 2:
+        if len(r2) > 0:
+            ronde_saat_ini = 3
+    else:
+        if len(r2) == len(bracket_fix) / 2:
+            ronde_saat_ini = 3
+            
     if len(r3) > 0:
         ronde_saat_ini = 4
     if len(r4) > 0:
         ronde_saat_ini = 5
     if len(r5) > 0:
         ronde_saat_ini = 6
-    
+                    
     return render_template("bracket.html",r2=r2, r3=r3, r4=r4, r5=r5, bracket_awal=bracket_fix, peserta_bye=peserta_bye, jumlah_peserta=jumlah_peserta, daftar_seed=daftar_seed, bracket_ukuran=jumlah_bracket(jumlah_peserta), ronde_saat_ini=ronde_saat_ini)
 
 @app.route("/ronde2", methods=["POST"])
@@ -226,7 +236,7 @@ def ronde2():
     pasangan = [(data[i], data[i+1]) for i in range(0, len(data), 2)]
     
     pemenang = []
-    pemenang = proses_ronde(pasangan)
+    pemenang = proses_ronde(pasangan, total_peserta=len(data))
     
     for row in data:
         for p in pemenang:
@@ -256,7 +266,7 @@ def ronde3():
     print(pasangan)
     
     pemenang = []
-    pemenang = proses_ronde(pasangan)
+    pemenang = proses_ronde(pasangan, total_peserta=len(data))
     
     for row in data:
         for p in pemenang:
@@ -286,7 +296,7 @@ def ronde4():
     print(pasangan)
     
     pemenang = []
-    pemenang = proses_ronde(pasangan)
+    pemenang = proses_ronde(pasangan, total_peserta=len(data))
     
     for row in data:
         for p in pemenang:
@@ -316,7 +326,7 @@ def ronde5():
     print(pasangan)
     
     pemenang = []
-    pemenang = proses_ronde(pasangan)
+    pemenang = proses_ronde(pasangan, total_peserta=len(data))
     
     for row in data:
         for p in pemenang:

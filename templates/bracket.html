@@ -362,17 +362,29 @@ section > div:nth-child(2n) {
             <button type="submit">Acak Skor<br>Lanjut Ronde 2</button>
         </form>
     {% elif ronde_saat_ini == 3 %}
+        {% if bracket_ukuran == 2 %}
+            <p style="color: yellow; font-weight: bold;">Pertandingan selesai 🎉</p>
+        {% else %}
         <form method="post" action="/ronde3">
             <button type="submit">Acak Skor<br>Lanjut Ronde 3</button>
         </form>
+        {% endif %}
     {% elif ronde_saat_ini == 4 %}
+        {% if bracket_ukuran == 4 %}
+            <p style="color: yellow; font-weight: bold;">Pertandingan selesai 🎉</p>
+        {% else %}
         <form method="post" action="/ronde4">
             <button type="submit">Acak Skor<br>Lanjut Ronde 4</button>
         </form>
+        {% endif %}
     {% elif ronde_saat_ini == 5 %}
+        {% if bracket_ukuran == 8 %}
+            <p style="color: yellow; font-weight: bold;">Pertandingan selesai 🎉</p>
+        {% else %}
         <form method="post" action="/ronde5">
             <button type="submit">Acak Skor<br>Lanjut Ronde 5</button>
         </form>
+        {% endif %}
     {% elif ronde_saat_ini == 6 %}
         <p style="color: yellow; font-weight: bold;">Pertandingan selesai 🎉</p>
     {% endif %}
@@ -390,7 +402,7 @@ section > div:nth-child(2n) {
 <section class="round1">
     {% for peserta in bracket_awal %}
         {% for i in range(2) %}
-            <div class="player" {% if peserta[i]["Keterangan"] == "seeded" %} id="seeded" {% endif %}>
+            <div class="player" {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded" {% endif %}>
             {{ peserta[i]["Nama"] }}
             {% if peserta[i]["r1"] == "1" %}
                 <span class="score">1</span>
@@ -415,7 +427,21 @@ section > div:nth-child(2n) {
 </div>
 
 <section id="round2">
-    {% if r2|length != 4 %}
+{% if bracket_ukuran == 2 %}
+    {% if r2|length != 1 %}
+        <div class="player champion" id="r5">
+            <span class="winner">WINNER</span>
+        </div>
+    {% else %}
+        {% for peserta in r2 %}
+            <div class="player winner-box" id="r5">
+                <span class="nama">{{ peserta["Nama"] }}</span>
+                <span class="winner">WINNER</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% else %}
+    {% if r2|length != bracket_ukuran // 4 %}
         {% for i in range(bracket_ukuran // 2) %}
             <div class="player" id="r2">
             {% for j in range(2) %}
@@ -440,6 +466,7 @@ section > div:nth-child(2n) {
             {% endfor %}
         {% endfor %}
     {% endif %}
+{% endif %}
 </section>
 
 <div class="connecter" id="conn2">
@@ -455,7 +482,21 @@ section > div:nth-child(2n) {
 </div>
 
 <section id="round3">
-    {% if r3|length != 2 %}
+{% if bracket_ukuran == 4 %}
+    {% if r3|length != 1 %}
+        <div class="player champion" id="r5">
+            <span class="winner">WINNER</span>
+        </div>
+    {% else %}
+        {% for peserta in r3 %}
+            <div class="player winner-box" id="r5">
+                <span class="nama">{{ peserta["Nama"] }}</span>
+                <span class="winner">WINNER</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% else %}
+    {% if r3|length != bracket_ukuran // 8 %}
         {% for i in range(bracket_ukuran // 4) %}
             <div class="player" id="r3">
                 <span class="score">0</span>
@@ -475,6 +516,7 @@ section > div:nth-child(2n) {
             {% endfor %}
         {% endfor %}
     {% endif %}
+{% endif %}
 </section>
 
 <div class="connecter" id="conn3">
@@ -490,7 +532,21 @@ section > div:nth-child(2n) {
 </div>
 
 <section id="round4">
+{% if bracket_ukuran == 8 %}
     {% if r4|length != 1 %}
+        <div class="player champion" id="r5">
+            <span class="winner">WINNER</span>
+        </div>
+    {% else %}
+        {% for peserta in r4 %}
+            <div class="player winner-box" id="r5">
+                <span class="nama">{{ peserta["Nama"] }}</span>
+                <span class="winner">WINNER</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% else %}
+    {% if r4|length != bracket_ukuran // 16 %}
         {% for i in range(bracket_ukuran // 8) %}
             <div class="player" id="r4">
                 <span class="score">0</span>
@@ -510,6 +566,7 @@ section > div:nth-child(2n) {
             {% endfor %}
         {% endfor %}
     {% endif %}
+{% endif %}
 </section>
 
 <div class="connecter" id="conn4">
@@ -524,6 +581,7 @@ section > div:nth-child(2n) {
     {% endfor %}
 </div>
 
+{% if bracket_ukuran == 16 %}
 <section id="round5">
     {% if r5|length != 1 %}
         <div class="player champion" id="r5">
@@ -538,6 +596,7 @@ section > div:nth-child(2n) {
         {% endfor %}
     {% endif %}
 </section>
+{% endif %}
 
 </article>
   <script>
