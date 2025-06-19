@@ -488,11 +488,26 @@ section > div:nth-child(2n) {
     font-size: 16px;
 }
 
-
 .winner-box .winner {
     font-size: 16px;
     color: #800000;
     font-weight: 900;
+}
+
+.glow-text {
+    background: linear-gradient(270deg, 
+     #ff0000, #ff3366, #ff6699, #ffb3c6, #ffe5ec, #ffb3c6, #ff6699, #ff3366, #ff0000, #990000);
+    background-size: 1000% 1000%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glowing 15s ease infinite;
+    font-weight: bold;
+}
+
+@keyframes glowing {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
   </style>
@@ -502,7 +517,7 @@ section > div:nth-child(2n) {
 
     <nav class="navbar">
         <div class="left">
-            <h1>Karate</h1>
+            <h1 class="glow-text">Karate ChampionShip</h1>
         </div>
         <div class="right">
             <input type="checkbox" id="check">
@@ -510,36 +525,53 @@ section > div:nth-child(2n) {
                 <i class="fa fa-bars"></i>
             </label>
             <ul class="list">
-                <li><a href="/">Home</a></li>
-                <li><a href="#">Bracket</a></li>
-            </ul>
+                <li>
+                    <a href="/"><button style="--clr:#ff0000;">
+                        <span>Home</span>
+                        <i></i>
+                    </button></a>
+                </li>
         </div>
 
-       <div class="nav-controls">
-    {% if ronde_saat_ini == 2 %}
-        <form method="post" action="/ronde2">
-            <button type="submit">Acak Skor<br>Lanjut Ronde 2</button>
-        </form>
-    {% elif ronde_saat_ini == 3 %}
-        <form method="post" action="/ronde3">
-            <button type="submit">Acak Skor<br>Lanjut Ronde 3</button>
-        </form>
-    {% elif ronde_saat_ini == 4 %}
-        <form method="post" action="/ronde4">
-            <button type="submit">Acak Skor<br>Lanjut Ronde 4</button>
-        </form>
-    {% elif ronde_saat_ini == 5 %}
-        <form method="post" action="/ronde5">
-            <button type="submit">Acak Skor<br>Lanjut Ronde 5</button>
-        </form>
-    {% elif ronde_saat_ini == 6 %}
-        <p style="color: yellow; font-weight: bold;">Pertandingan selesai 🎉</p>
-    {% endif %}
-</div>
-
+        <div class="nav-controls">
+        {% if ronde_saat_ini == 2 %}
+            <form method="post" action="/ronde2">
+                <button type="submit" style="--clr:#ff0000;">
+                    <span>Acak Skor<br>Lanjut Ronde 2</span>
+                    <i></i>
+                </button>
+            </form>
+        {% elif ronde_saat_ini == 3 %}
+            <form method="post" action="/ronde3">
+                <button type="submit" style="--clr:#ff0000;">
+                    <span>Acak Skor<br>Lanjut Ronde 3</span>
+                    <i></i>
+                </button>
+            </form>
+        {% elif ronde_saat_ini == 4 %}
+            <form method="post" action="/ronde4">
+                <button type="submit" style="--clr:#ff0000;">
+                    <span>Acak Skor<br>Lanjut Ronde 4</span>
+                    <i></i>
+                </button>
+            </form>
+        {% elif ronde_saat_ini == 5 %}
+            <form method="post" action="/ronde5">
+                <button type="submit" style="--clr:#ff0000;">
+                    <span>Acak Skor<br>Lanjut Ronde 5</span>
+                    <i></i>
+                </button>
+            </form>
+        {% elif ronde_saat_ini == 6 %}
+            <p style="color: rgb(255, 187, 0); font-weight: bold;">Pertandingan selesai 🎉</p>
+        {% endif %}
+    </div>
 
         <form method="post" action="/generate" class="generate-form" onsubmit="return confirm('Yakin ingin random ulang dan menghapus bracket sebelumnya?');">
-            <button type="submit">Acak Ulang Bracket</button>
+            <button type="submit" style="--clr:#ff0000;">
+                <span>Acak Ulang Bracket</span>
+                <i></i>
+            </button>
         </form>
     </nav>
 
