@@ -201,7 +201,9 @@ def bracket():
             r5.append(row)
                 
     ukuran_bracket = jumlah_bracket(jumlah_peserta)
+    bye = r2.copy()
     
+
     if ukuran_bracket > 2:
         r2 = [(r2[i], r2[i+1]) for i in range(0, len(r2), 2) if len(r2) % 2 == 0]
     
@@ -218,15 +220,15 @@ def bracket():
     else:
         if len(r2) == len(bracket_fix) / 2:
             ronde_saat_ini = 3
-            
+        
     if len(r3) > 0:
         ronde_saat_ini = 4
     if len(r4) > 0:
         ronde_saat_ini = 5
     if len(r5) > 0:
         ronde_saat_ini = 6
-                    
-    return render_template("bracket.html",r2=r2, r3=r3, r4=r4, r5=r5, bracket_awal=bracket_fix, peserta_bye=peserta_bye, jumlah_peserta=jumlah_peserta, daftar_seed=daftar_seed, bracket_ukuran=jumlah_bracket(jumlah_peserta), ronde_saat_ini=ronde_saat_ini)
+                
+    return render_template("bracket.html",r2=r2, r3=r3, r4=r4, r5=r5, bracket_awal=bracket_fix, peserta_bye=peserta_bye, jumlah_peserta=jumlah_peserta, daftar_seed=daftar_seed, bracket_ukuran=jumlah_bracket(jumlah_peserta), ronde_saat_ini=ronde_saat_ini, bye=bye)
 
 @app.route("/ronde2", methods=["POST"])
 def ronde2():
@@ -262,9 +264,7 @@ def ronde3():
             pasangan.append(row)
             
     pasangan = [(pasangan[i], pasangan[i+1]) for i in range(0, len(pasangan), 2)]
-            
-    print(pasangan)
-    
+                
     pemenang = []
     pemenang = proses_ronde(pasangan, total_peserta=len(data))
     
@@ -292,8 +292,6 @@ def ronde4():
             pasangan.append(row)
             
     pasangan = [(pasangan[i], pasangan[i+1]) for i in range(0, len(pasangan), 2)]
-            
-    print(pasangan)
     
     pemenang = []
     pemenang = proses_ronde(pasangan, total_peserta=len(data))
@@ -322,9 +320,7 @@ def ronde5():
             pasangan.append(row)
             
     pasangan = [(pasangan[i], pasangan[i+1]) for i in range(0, len(pasangan), 2)]
-            
-    print(pasangan)
-    
+               
     pemenang = []
     pemenang = proses_ronde(pasangan, total_peserta=len(data))
     

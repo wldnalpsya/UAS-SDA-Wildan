@@ -323,10 +323,22 @@ section > div:nth-child(2n) {
     margin-bottom: 20px;
 }
 
-#seeded {
-    background: #ff0000;
+#seeded{
+    background: linear-gradient(to right, #ec0202, #c5f600)
 }
 
+#seeded1{
+    background: linear-gradient(to right, #ec0202, #c5f600)
+}
+#seeded2 {
+    background: linear-gradient(to right, #2102ec, #c5f600)
+}
+#normal1 {
+    background:#6e0303 
+}
+#normal2 {
+    background:#15036e 
+}
 .connecter { 
     width: 30px; 
     height: 520px; 
@@ -510,6 +522,14 @@ section > div:nth-child(2n) {
     100% { background-position: 0% 50%; }
 }
 
+#bye {
+    visibility: hidden;
+}
+
+.bye {
+    visibility: hidden;
+}
+
   </style>
 
 </head>
@@ -593,7 +613,10 @@ section > div:nth-child(2n) {
 <section class="round1">
     {% for peserta in bracket_awal %}
         {% for i in range(2) %}
-            <div class="player" {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded" {% endif %}>
+        {% if peserta[0]["Keterangan"] == "BYE" or peserta[1]["Keterangan"] == "BYE" %}
+            <div class="player" id="bye"></div>
+        {% else %}
+            <div class="player" {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded" {% endif %} {% if i == 1 %} id="normal2" {% else %} id="normal1" {% endif %}>
             {{ peserta[i]["Nama"] }}
             {% if peserta[i]["r1"] == "1" %}
                 <span class="score">1</span>
@@ -601,19 +624,28 @@ section > div:nth-child(2n) {
                 <span class="score">0</span>
             {% endif %}
             </div>
+        {% endif %}
         {% endfor %}
     {% endfor %}
 </section>
 
 <div class="connecter" id="conn1">
     {% for i in range(bracket_ukuran // 2) %}
-    <div></div>
+        {% if bracket_awal[i][0]["Keterangan"] == "BYE" or bracket_awal[i][1]["Keterangan"] == "BYE" %}
+            <div class="bye"></div>
+        {% else %}
+            <div></div>
+        {% endif %}
     {% endfor %}
 </div>
 
 <div class="line">
     {% for i in range(bracket_ukuran // 2) %}
-    <div></div>
+        {% if bracket_awal[i][0]["Keterangan"] == "BYE" or bracket_awal[i][1]["Keterangan"] == "BYE" %}
+            <div class="bye"></div>
+        {% else %}
+            <div></div>
+        {% endif %}
     {% endfor %}
 </div>
 
@@ -634,7 +666,41 @@ section > div:nth-child(2n) {
 {% else %}
     {% if r2|length != bracket_ukuran // 4 %}
         {% for i in range(bracket_ukuran // 2) %}
-            <div class="player" id="r2">
+            <div class="player"
+            {% if i % 2 == 1 %}
+                {% if bracket_awal[i][0]["Keterangan"] == "Seeded" %}
+                    {% if bracket_awal[i][0] in bye %}
+                    id="seeded2"
+                    {% else %}
+                    id="normal2"
+                    {% endif %}
+                {% elif bracket_awal[i][1]["Keterangan"] == "Seeded" %}
+                    {% if bracket_awal[i][1] in bye %}
+                    id="seeded2"
+                    {% else %}
+                    id="normal2"
+                    {% endif %}
+                {% else %}
+                    id="normal2"
+                {% endif %}
+            {% else %}
+                {% if bracket_awal[i][0]["Keterangan"] == "Seeded" %}
+                    {% if bracket_awal[i][0] in bye %}
+                    id="seeded1"
+                    {% else %}
+                    id="normal1"
+                    {% endif %}
+                {% elif bracket_awal[i][1]["Keterangan"] == "Seeded" %}
+                    {% if bracket_awal[i][1] in bye %}
+                    id="seeded1"
+                    {% else %}
+                    id="normal1"
+                    {% endif %}
+                {% else %}
+                    id="normal1"
+                {% endif %}
+            {% endif %}
+            >
             {% for j in range(2) %}
                 {% if bracket_awal[i][j]["r1"] == "1" %}
                     {{ bracket_awal[i][j]["Nama"] }}
@@ -646,7 +712,7 @@ section > div:nth-child(2n) {
     {% else %}
         {% for peserta in r2 %}
             {% for i in range(2) %}
-            <div class="player" id="r3">
+            <div class="player" {% if i == 1 %} {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded2" {% else %} id="normal2" {% endif %} {% else %} {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded1" {% else %} id="normal1"  {% endif %} {% endif %}>
                 {{ peserta[i]["Nama"] }}
                 {% if peserta[i]["r2"] == "1" %}
                     <span class="score">1</span>
@@ -689,14 +755,19 @@ section > div:nth-child(2n) {
 {% else %}
     {% if r3|length != bracket_ukuran // 8 %}
         {% for i in range(bracket_ukuran // 4) %}
-            <div class="player" id="r3">
+           <div class="player" {% if i % 2 == 1 %} id="normal2" {% else %} id="normal1" {% endif %}>
                 <span class="score">0</span>
             </div>
         {% endfor %}
     {% else %}
         {% for peserta in r3 %}
             {% for i in range(2) %}
-                <div class="player" id="r3">
+            <div class="player"
+            {% if i == 1 %}
+            {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded2" {% else %} id="normal2" {% endif %}
+            {% else %}
+            {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded1" {% else %} id="normal1" {% endif %}   
+            {% endif %}>
                 {{ peserta[i]["Nama"] }}
                 {% if peserta[i]["r3"] == "1" %}
                     <span class="score">1</span>
@@ -730,7 +801,7 @@ section > div:nth-child(2n) {
         </div>
     {% else %}
         {% for peserta in r4 %}
-            <div class="player winner-box" id="r5">
+            <div class="player winner-box">
                 <span class="nama">{{ peserta["Nama"] }}</span>
                 <span class="winner">WINNER</span>
             </div>
@@ -739,15 +810,19 @@ section > div:nth-child(2n) {
 {% else %}
     {% if r4|length != bracket_ukuran // 16 %}
         {% for i in range(bracket_ukuran // 8) %}
-            <div class="player" id="r4">
+            <div class="player" {% if i == 1 %} id="normal2" {% else %} id="normal1" {% endif %}>
                 <span class="score">0</span>
             </div>
         {% endfor %}
     {% else %}
         {% for peserta in r4 %}
             {% for i in range(2) %}
-                <div class="player" id="r4">
-                {{ peserta[i]["Nama"] }}
+                <div class="player"
+                {% if i == 1 %} {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded2" {% else %} id="normal2" {% endif %}
+                {% else %}
+                {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded1" {% else %} id="normal1"  {% endif %}
+                {% endif %}>
+                    {{ peserta[i]["Nama"] }}
                 {% if peserta[i]["r4"] == "1" %}
                     <span class="score">1</span>
                 {% else %}
