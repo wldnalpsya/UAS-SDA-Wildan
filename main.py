@@ -3,29 +3,33 @@ import random
 import csv
 
 # Backend
-def proses_ronde(round_data, total_peserta):
+
+def proses_ronde(round_data, total_peserta, skor_data, ronde_ke):
     round_selanjutnya = []
 
-    total_main = len(round_data)
-
     for p1, p2 in round_data:
-        if p1["Keterangan"].lower() == "bye" or p2["Keterangan"].lower() == "bye":
-            round_selanjutnya.append(p1 if p1["Keterangan"].lower() != "bye" else p2)
+        nama1 = p1["Nama"]
+        nama2 = p2["Nama"]
+
+        if nama1 == "BYE":
+            round_selanjutnya.append(p2)
+            continue
+        elif nama2 == "BYE":
+            round_selanjutnya.append(p1)
             continue
 
-        if total_main >= 8:
-            if p1["Keterangan"].lower() == "seeded":
-                winner = p1
-            elif p2["Keterangan"].lower() == "seeded":
-                winner = p2
-            else:
-                skor_p1 = random.randint(0, 1)
-                winner = p1 if skor_p1 == 1 else p2
-        else:
-            skor_p1 = random.randint(0, 1)
-            winner = p1 if skor_p1 == 1 else p2
+        skor1 = int(skor_data.get(nama1, {}).get(f"skor{ronde_ke}", 0))
+        skor2 = int(skor_data.get(nama2, {}).get(f"skor{ronde_ke}", 0))
 
-        round_selanjutnya.append(winner)
+        if skor1 == 0 and skor2 == 0:
+            continue
+
+        if skor1 > skor2:
+            round_selanjutnya.append(p1)
+        elif skor2 > skor1:
+            round_selanjutnya.append(p2)
+        else:
+            continue
 
     return round_selanjutnya
 
@@ -102,6 +106,26 @@ def buat_bracket(jumlah_peserta, daftar_seed, semua_nama):
 
     return [(slot_peserta[i], slot_peserta[i + 1]) for i in range(0, ukuran_bracket, 2)]
 
+def buat_skor_csv(rincian_bracket):
+    with open("skor.csv", "w", newline='', encoding='utf-8') as f:
+        fieldnames = ["Nama", "skor1", "skor2", "skor3", "skor4", "skor5"]
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        for row in rincian_bracket:
+            if row["Nama"] != "BYE":
+                writer.writerow({"Nama": row["Nama"], "skor1": 0, "skor2": 0, "skor3": 0, "skor4": 0, "skor5": 0})
+                
+def baca_skor():
+    skor_dict = {}
+    try:
+        with open("skor.csv", newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                skor_dict[row["Nama"]] = row
+    except FileNotFoundError:
+        pass
+    return skor_dict
+
                 
 # Flask
 app = Flask(__name__)
@@ -162,6 +186,8 @@ def generate_bracket():
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rincian_bracket)
+        
+    buat_skor_csv(rincian_bracket)
 
     return redirect("/bracket")
 
@@ -202,7 +228,8 @@ def bracket():
                 
     ukuran_bracket = jumlah_bracket(jumlah_peserta)
     bye = r2.copy()
-    
+    win_r2 = r3.copy()
+    win_r3 = r4.copy()
 
     if ukuran_bracket > 2:
         r2 = [(r2[i], r2[i+1]) for i in range(0, len(r2), 2) if len(r2) % 2 == 0]
@@ -220,15 +247,17 @@ def bracket():
     else:
         if len(r2) == len(bracket_fix) / 2:
             ronde_saat_ini = 3
-        
-    if len(r3) > 0:
+    
+    if len(r3) == len(bracket_fix) // 4:
         ronde_saat_ini = 4
-    if len(r4) > 0:
+    if len(r4) == len(bracket_fix) // 8:
         ronde_saat_ini = 5
     if len(r5) > 0:
         ronde_saat_ini = 6
+        
+    skor_dict = baca_skor()
                 
-    return render_template("bracket.html",r2=r2, r3=r3, r4=r4, r5=r5, bracket_awal=bracket_fix, peserta_bye=peserta_bye, jumlah_peserta=jumlah_peserta, daftar_seed=daftar_seed, bracket_ukuran=jumlah_bracket(jumlah_peserta), ronde_saat_ini=ronde_saat_ini, bye=bye)
+    return render_template("bracket.html",win_r2=win_r2, win_r3=win_r3, skor_dict=skor_dict , r2=r2, r3=r3, r4=r4, r5=r5, bracket_awal=bracket_fix, peserta_bye=peserta_bye, jumlah_peserta=jumlah_peserta, daftar_seed=daftar_seed, bracket_ukuran=jumlah_bracket(jumlah_peserta), ronde_saat_ini=ronde_saat_ini, bye=bye)
 
 @app.route("/ronde2", methods=["POST"])
 def ronde2():
@@ -238,7 +267,7 @@ def ronde2():
     pasangan = [(data[i], data[i+1]) for i in range(0, len(data), 2)]
     
     pemenang = []
-    pemenang = proses_ronde(pasangan, total_peserta=len(data))
+    pemenang = proses_ronde(pasangan, total_peserta=len(data),skor_data=baca_skor(), ronde_ke=1)
     
     for row in data:
         for p in pemenang:
@@ -266,7 +295,7 @@ def ronde3():
     pasangan = [(pasangan[i], pasangan[i+1]) for i in range(0, len(pasangan), 2)]
                 
     pemenang = []
-    pemenang = proses_ronde(pasangan, total_peserta=len(data))
+    pemenang = proses_ronde(pasangan, total_peserta=len(data), skor_data=baca_skor(), ronde_ke=2)
     
     for row in data:
         for p in pemenang:
@@ -294,7 +323,7 @@ def ronde4():
     pasangan = [(pasangan[i], pasangan[i+1]) for i in range(0, len(pasangan), 2)]
     
     pemenang = []
-    pemenang = proses_ronde(pasangan, total_peserta=len(data))
+    pemenang = proses_ronde(pasangan, total_peserta=len(data), skor_data=baca_skor(), ronde_ke=3)
     
     for row in data:
         for p in pemenang:
@@ -322,7 +351,7 @@ def ronde5():
     pasangan = [(pasangan[i], pasangan[i+1]) for i in range(0, len(pasangan), 2)]
                
     pemenang = []
-    pemenang = proses_ronde(pasangan, total_peserta=len(data))
+    pemenang = proses_ronde(pasangan, total_peserta=len(data), skor_data=baca_skor(), ronde_ke=4)
     
     for row in data:
         for p in pemenang:

@@ -618,11 +618,13 @@ section > div:nth-child(2n) {
         {% else %}
             <div class="player" {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded" {% endif %} {% if i == 1 %} id="normal2" {% else %} id="normal1" {% endif %}>
             {{ peserta[i]["Nama"] }}
-            {% if peserta[i]["r1"] == "1" %}
-                <span class="score">1</span>
-            {% else %}
-                <span class="score">0</span>
-            {% endif %}
+                {% if skor_dict[peserta[i]["Nama"]] %}
+                    <span class="score">
+                    {{ skor_dict[peserta[i]["Nama"]]["skor1"] }}
+                    </span>
+                {% else %}
+                    <span class="score">0</span>
+                {% endif %}
             </div>
         {% endif %}
         {% endfor %}
@@ -714,8 +716,10 @@ section > div:nth-child(2n) {
             {% for i in range(2) %}
             <div class="player" {% if i == 1 %} {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded2" {% else %} id="normal2" {% endif %} {% else %} {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded1" {% else %} id="normal1"  {% endif %} {% endif %}>
                 {{ peserta[i]["Nama"] }}
-                {% if peserta[i]["r2"] == "1" %}
-                    <span class="score">1</span>
+                {% if skor_dict[peserta[i]["Nama"]] %}
+                    <span class="score">
+                    {{ skor_dict[peserta[i]["Nama"]]["skor2"] }}
+                    </span>
                 {% else %}
                     <span class="score">0</span>
                 {% endif %}
@@ -755,9 +759,54 @@ section > div:nth-child(2n) {
 {% else %}
     {% if r3|length != bracket_ukuran // 8 %}
         {% for i in range(bracket_ukuran // 4) %}
-           <div class="player" {% if i % 2 == 1 %} id="normal2" {% else %} id="normal1" {% endif %}>
+            {% if r2|length == bracket_ukuran // 4 %}
+            <div class="player"
+            {% if i % 2 == 1 %}
+                {% if r2[i][0]["Keterangan"] == "Seeded" %}
+                    {% if r2[i][0] in win_r2 %}
+                    id="seeded2"
+                    {% else %}
+                    id="normal2"
+                    {% endif %}
+                {% elif r2[i][1]["Keterangan"] == "Seeded" %}
+                    {% if r2[i][1] in win_r2 %}
+                    id="seeded2"
+                    {% else %}
+                    id="normal2"
+                    {% endif %}
+                {% else %}
+                    id="normal2"
+                {% endif %}
+            {% else %}
+                {% if r2[i][0]["Keterangan"] == "Seeded" %}
+                    {% if r2[i][0] in win_r2 %}
+                    id="seeded1"
+                    {% else %}
+                    id="normal1"
+                    {% endif %}
+                {% elif r2[i][1]["Keterangan"] == "Seeded" %}
+                    {% if r2[i][1] in win_r2 %}
+                    id="seeded1"
+                    {% else %}
+                    id="normal1"
+                    {% endif %}
+                {% else %}
+                    id="normal1"
+                {% endif %}
+            {% endif %}
+            >
+            {% for j in range(2) %}
+                {% if r2[i][j]["r2"] == "1" %}
+                    {{ r2[i][j]["Nama"] }}
+                {% endif %}
+            {% endfor %}
                 <span class="score">0</span>
             </div>
+            {% else %}
+                <div class="player" {% if i == 1 %} id="normal2" {% else %} id="normal1" {% endif %}>
+                    <span class="score">0</span>
+                </div>
+            {% endif %}
         {% endfor %}
     {% else %}
         {% for peserta in r3 %}
@@ -768,12 +817,14 @@ section > div:nth-child(2n) {
             {% else %}
             {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded1" {% else %} id="normal1" {% endif %}   
             {% endif %}>
-                {{ peserta[i]["Nama"] }}
-                {% if peserta[i]["r3"] == "1" %}
-                    <span class="score">1</span>
-                {% else %}
-                    <span class="score">0</span>
-                {% endif %}
+            {{ peserta[i]["Nama"] }}
+            {% if skor_dict[peserta[i]["Nama"]] %}
+                    <span class="score">
+                    {{ skor_dict[peserta[i]["Nama"]]["skor3"] }}
+                    </span>
+            {% else %}
+        <span class="score">0</span>
+    {% endif %}
             </div>
             {% endfor %}
         {% endfor %}
@@ -810,9 +861,54 @@ section > div:nth-child(2n) {
 {% else %}
     {% if r4|length != bracket_ukuran // 16 %}
         {% for i in range(bracket_ukuran // 8) %}
-            <div class="player" {% if i == 1 %} id="normal2" {% else %} id="normal1" {% endif %}>
+            {% if r3|length == bracket_ukuran // 8 %}
+            <div class="player"
+            {% if i % 2 == 1 %}
+                {% if r3[i][0]["Keterangan"] == "Seeded" %}
+                    {% if r3[i][0] in win_r3 %}
+                    id="seeded2"
+                    {% else %}
+                    id="normal2"
+                    {% endif %}
+                {% elif r3[i][1]["Keterangan"] == "Seeded" %}
+                    {% if r3[i][1] in win_r3 %}
+                    id="seeded2"
+                    {% else %}
+                    id="normal2"
+                    {% endif %}
+                {% else %}
+                    id="normal2"
+                {% endif %}
+            {% else %}
+                {% if r3[i][0]["Keterangan"] == "Seeded" %}
+                    {% if r3[i][0] in win_r3 %}
+                    id="seeded1"
+                    {% else %}
+                    id="normal1"
+                    {% endif %}
+                {% elif r3[i][1]["Keterangan"] == "Seeded" %}
+                    {% if r3[i][1] in win_r3 %}
+                    id="seeded1"
+                    {% else %}
+                    id="normal1"
+                    {% endif %}
+                {% else %}
+                    id="normal1"
+                {% endif %}
+            {% endif %}
+            >
+            {% for j in range(2) %}
+                {% if r3[i][j]["r3"] == "1" %}
+                    {{ r3[i][j]["Nama"] }}
+                {% endif %}
+            {% endfor %}
                 <span class="score">0</span>
             </div>
+            {% else %}
+                <div class="player" {% if i == 1 %} id="normal2" {% else %} id="normal1" {% endif %}>
+                    <span class="score">0</span>
+                </div>
+            {% endif %}
         {% endfor %}
     {% else %}
         {% for peserta in r4 %}
@@ -822,9 +918,11 @@ section > div:nth-child(2n) {
                 {% else %}
                 {% if peserta[i]["Keterangan"] == "Seeded" %} id="seeded1" {% else %} id="normal1"  {% endif %}
                 {% endif %}>
-                    {{ peserta[i]["Nama"] }}
-                {% if peserta[i]["r4"] == "1" %}
-                    <span class="score">1</span>
+                {{ peserta[i]["Nama"] }}
+                {% if skor_dict[peserta[i]["Nama"]] %}
+                    <span class="score">
+                    {{ skor_dict[peserta[i]["Nama"]]["skor4"] }}
+                    </span>
                 {% else %}
                     <span class="score">0</span>
                 {% endif %}
